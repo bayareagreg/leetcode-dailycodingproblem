@@ -93,7 +93,29 @@ func (c *LRUCache) moveNodeToFront(node *Node) {
 	}
 }
 
-func (c *LRUCache) Print() {
+func (c *LRUCache) remove(key interface{}) bool {
+	node, ok := c.m[key]
+	if !ok {
+		return false
+	} else {
+		delete(c.m, key)
+		if node.prev != nil {
+			node.prev.next = node.next
+		}
+		if node.next != nil {
+			node.next.prev = node.prev
+		}
+		if c.first == node {
+			c.first = c.first.next
+		}
+		if c.last == node {
+			c.last = c.last.prev
+		}
+		return true
+	}
+}
+
+func (c *LRUCache) print() {
 	fmt.Printf("LRUCache:\n")
 	fmt.Printf("  max size: %v\n", c.sz)
 	fmt.Printf("  map: %v\n", c.m)
@@ -138,17 +160,21 @@ func main() {
 	c.set(4, 4)
 	v := c.get(4)
 	fmt.Println(v)
-	c.Print()
+	c.print()
 	v = c.get(3)
 	fmt.Println(v)
-	c.Print()
+	c.print()
 	v = c.get(2)
 	fmt.Println(v)
 	v = c.get(1)
 	fmt.Println(v)
-	c.Print()
+	c.print()
 	c.set(5, 5)
-	c.Print()
+	c.print()
+	fmt.Printf("remove(91) = %v\n", c.remove(91))
+	c.print()
+	fmt.Printf("remove(3) = %v\n", c.remove(3))
+	c.print()
 
 	/*
 		c.Print()
