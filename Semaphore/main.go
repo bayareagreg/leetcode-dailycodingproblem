@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+//
+// Design and implement a fair semaphore
+// A fair semaphore must guarantee that goroutines acquire permits in the exact order they requested them.
+//
+
 type Semaphore struct {
 	mu      sync.Mutex
 	permits int
@@ -63,7 +68,7 @@ func (s *Semaphore) Release() {
 func main() {
 	sem := NewSemaphore(1)
 
-	for i := range 5 {
+	for i := range 10 {
 		go func(id int) {
 			then := sem.Acquire()
 			defer sem.Release()
@@ -73,5 +78,5 @@ func main() {
 		}(i)
 	}
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(15 * time.Second)
 }
